@@ -77,7 +77,7 @@ export default function ListDetailScreen({
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.hint}>Long-press &amp; drag to reorder items</Text>
+      <Text style={styles.hint}>Long-press & drag to reorder items</Text>
 
       <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 40 }}>
         <DraggableList
