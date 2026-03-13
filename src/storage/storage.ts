@@ -8,7 +8,16 @@ const SAVED_ITEMS_KEY = "@saved_items";
 
 export async function loadLists(): Promise<ShoppingList[]> {
   const json = await AsyncStorage.getItem(LISTS_KEY);
-  return json ? JSON.parse(json) : [];
+  if (!json) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(json);
+  } catch {
+    await AsyncStorage.removeItem(LISTS_KEY);
+    return [];
+  }
 }
 
 export async function saveLists(lists: ShoppingList[]): Promise<void> {
@@ -19,7 +28,16 @@ export async function saveLists(lists: ShoppingList[]): Promise<void> {
 
 export async function loadSavedItems(): Promise<SavedItem[]> {
   const json = await AsyncStorage.getItem(SAVED_ITEMS_KEY);
-  return json ? JSON.parse(json) : [];
+  if (!json) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(json);
+  } catch {
+    await AsyncStorage.removeItem(SAVED_ITEMS_KEY);
+    return [];
+  }
 }
 
 export async function saveSavedItems(items: SavedItem[]): Promise<void> {
