@@ -16,23 +16,44 @@ export function useShoppingLists() {
   // Load from storage on mount
   useEffect(() => {
     (async () => {
-      const [storedLists, storedSaved] = await Promise.all([
-        loadLists(),
-        loadSavedItems(),
-      ]);
-      setLists(storedLists);
-      setSavedItems(storedSaved);
-      setReady(true);
+      try {
+        const [storedLists, storedSaved] = await Promise.all([
+          loadLists(),
+          loadSavedItems(),
+        ]);
+        setLists(storedLists);
+        setSavedItems(storedSaved);
+        setReady(true);
+      } catch (error) {
+        // Optionally handle or log initialization errors
+        console.error("Failed to load shopping lists from storage:", error);
+      }
     })();
   }, []);
 
   // Persist whenever lists change
   useEffect(() => {
-    if (ready) saveLists(lists);
+    if (!ready) return;
+
+    (async () => {
+      try {
+        await saveLists(lists);
+      } catch (error) {
+        console.error("Failed to save shopping lists:", error);
+      }
+    })();
   }, [lists, ready]);
 
   useEffect(() => {
-    if (ready) saveSavedItems(savedItems);
+    if (!ready) return;
+
+    (async () => {
+      try {
+        await saveSavedItems(savedItems);
+      } catch (error) {
+        console.error("Failed to save saved items:", error);
+      }
+    })();
   }, [savedItems, ready]);
 
   /** Create a new list pre-populated with all remembered items */
