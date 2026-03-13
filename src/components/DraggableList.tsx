@@ -36,20 +36,27 @@ export default function DraggableList({
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 10,
-      onPanResponderGrant: (_, g) => {
-        const idx = Math.floor(g.y0 / ROW_HEIGHT);
+      onPanResponderGrant: (evt, _g) => {
+        const locationY = evt.nativeEvent.locationY;
+        const idx = Math.floor(locationY / ROW_HEIGHT);
+        if (idx < 0 || idx >= currentOrder.current.length) {
+          dragIndex.current = -1;
+          dragging.current = null;
+          return;
+        }
         dragIndex.current = idx;
         setDraggingIndex(idx);
         dragY.setValue(0);
       },
-      onPanResponderMove: (_, g) => {
+      onPanResponderMove: (evt, g) => {
         dragY.setValue(g.dy);
         const from = dragIndex.current;
+        const locationY = evt.nativeEvent.locationY;
         const to = Math.max(
           0,
           Math.min(
             currentOrder.current.length - 1,
-            Math.floor((g.y0 + g.dy) / ROW_HEIGHT)
+            Math.floor(locationY / ROW_HEIGHT)
           )
         );
         if (from !== to && from >= 0) {
