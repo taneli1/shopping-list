@@ -38,7 +38,7 @@ export function useShoppingLists() {
   /** Create a new list pre-populated with all remembered items */
   const createList = useCallback(
     (name: string) => {
-      const items: ShoppingItem[] = savedItems
+      const items: ShoppingItem[] = [...savedItems]
         .sort((a, b) => a.order - b.order)
         .map((si, idx) => ({
           id: uuidv4(),
