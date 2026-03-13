@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Animated,
   PanResponder,
@@ -23,7 +23,7 @@ export default function DraggableList({
   onRemove,
   onReorder,
 }: Props) {
-  const dragging = useRef<number | null>(null);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const currentOrder = useRef<ShoppingItem[]>(items);
   const dragY = useRef(new Animated.Value(0)).current;
   const dragIndex = useRef<number>(-1);
@@ -39,7 +39,7 @@ export default function DraggableList({
       onPanResponderGrant: (_, g) => {
         const idx = Math.floor(g.y0 / ROW_HEIGHT);
         dragIndex.current = idx;
-        dragging.current = idx;
+        setDraggingIndex(idx);
         dragY.setValue(0);
       },
       onPanResponderMove: (_, g) => {
@@ -61,7 +61,7 @@ export default function DraggableList({
         }
       },
       onPanResponderRelease: () => {
-        dragging.current = null;
+        setDraggingIndex(null);
         dragY.setValue(0);
         onReorder(currentOrder.current);
       },
@@ -71,7 +71,7 @@ export default function DraggableList({
   return (
     <View style={styles.container} {...panResponder.panHandlers}>
       {items.map((item, index) => {
-        const isDragging = dragging.current === index;
+        const isDragging = draggingIndex === index;
         return (
           <Animated.View
             key={item.id}
