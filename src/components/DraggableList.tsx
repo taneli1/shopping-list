@@ -41,7 +41,6 @@ export default function DraggableList({
         const idx = Math.floor(locationY / ROW_HEIGHT);
         if (idx < 0 || idx >= currentOrder.current.length) {
           dragIndex.current = -1;
-          dragging.current = null;
           return;
         }
         dragIndex.current = idx;

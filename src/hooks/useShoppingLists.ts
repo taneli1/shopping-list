@@ -25,8 +25,8 @@ export function useShoppingLists() {
         setSavedItems(storedSaved);
         setReady(true);
       } catch (error) {
-        // Optionally handle or log initialization errors
         console.error("Failed to load shopping lists from storage:", error);
+        setReady(true);
       }
     })();
   }, []);
